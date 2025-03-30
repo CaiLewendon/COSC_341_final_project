@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">final_project</string>
+    <string name="game_discovery_filtering">Game Discovery &amp; Filtering</string>
+    <string name="game_registration_rsvp">Game Registration &amp; RSVP System</string>
+    <string name="game_creation_management">Game Creation &amp; Management</string>
+    <string name="player_rating_review">Player Rating &amp; Review System</string>
+    <string name="venue_court_reservation">Venue &amp; Court Reservation System</string>
+</resources>
