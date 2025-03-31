@@ -1,23 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
+<FrameLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".PlayerListActivity">
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:title="Players" />
+    <!-- Container for Player List -->
+    <LinearLayout
+         android:id="@+id/playerListLayout"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewPlayers"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+         <!-- You can include a toolbar or header here if needed -->
 
-</LinearLayout>
+         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewPlayers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+    <!-- Container for Player Detail (initially hidden) -->
+    <LinearLayout
+         android:id="@+id/playerDetailLayout"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:orientation="vertical"
+         android:visibility="gone">
+
+         <!-- Toolbar or header with a back button to return to the list -->
+         <androidx.appcompat.widget.Toolbar
+             android:id="@+id/toolbarDetail"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="?attr/colorPrimary"
+             android:title="Player Detail"
+             android:titleTextColor="@android:color/white">
+
+             <!-- Optional Back Button -->
+             <ImageView
+                 android:id="@+id/btnBackToList"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:padding="8dp"
+                 android:src="@drawable/ic_launcher_background"
+                 android:contentDescription="Back" />
+         </androidx.appcompat.widget.Toolbar>
+
+         <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/ivPlayerAvatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/ic_launcher_background"
+                    android:contentDescription="Player Avatar" />
+
+                <TextView
+                    android:id="@+id/tvPlayerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Player Name"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:paddingTop="8dp" />
+
+                <TextView
+                    android:id="@+id/tvReviewsHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reviews"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:paddingTop="16dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewReviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+                <Button
+                    android:id="@+id/btnAddReview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add Review"
+                    android:layout_marginTop="16dp"/>
+            </LinearLayout>
+         </ScrollView>
+    </LinearLayout>
+
+</FrameLayout>
