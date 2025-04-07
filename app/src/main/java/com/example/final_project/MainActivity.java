@@ -17,12 +17,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Load the default fragment, Game Discovery
+        // By default, load the Game Creation fragment first
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main, new GameDiscoveryFragment())
+                .replace(R.id.main, new GameCreationFragment())
                 .commit();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // Make sure the Game Creation icon is selected initially
+        bottomNavigationView.setSelectedItemId(R.id.nav_creation);
+
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
