@@ -85,12 +85,9 @@ public class GameDiscoveryFragment extends Fragment {
                 TextView gameLocation = cardView.findViewById(R.id.game_location);
                 TextView gameTime = cardView.findViewById(R.id.game_time);
 
-                // Check if game has resource image or URI
                 if (game.hasImageResource()) {
-                    // Set image from resource ID
                     gameImage.setImageResource(game.getImageResourceId());
                 } else if (game.getImageUri() != null) {
-                    // Handle URI image if any old games still use it
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(
                                 getActivity().getContentResolver(),
@@ -109,6 +106,19 @@ public class GameDiscoveryFragment extends Fragment {
                         new SimpleDateFormat("MMM dd, yyyy - hh:mm a", Locale.getDefault())
                                 .format(game.getDateTime())
                 );
+
+                cardView.setOnClickListener(v -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("selected_game", game);
+
+                    GameRegistrationFragment registrationFragment = new GameRegistrationFragment();
+                    registrationFragment.setArguments(bundle);
+
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.main, registrationFragment)
+                            .addToBackStack(null)
+                            .commit();
+                });
 
                 gamesContainer.addView(cardView);
             }
