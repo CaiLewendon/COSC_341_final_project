@@ -93,52 +93,13 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Date and Time Selection -->
-        <TextView
-            android:id="@+id/datetime_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Date and Time"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/address_layout"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/date_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@android:drawable/editbox_background"
-            android:drawableStart="@android:drawable/ic_menu_my_calendar"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:padding="12dp"
-            android:text="Select Date"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/datetime_label"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/time_text_view" />
-
-        <TextView
-            android:id="@+id/time_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@android:drawable/editbox_background"
-            android:drawableStart="@android:drawable/ic_menu_recent_history"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:padding="12dp"
-            android:text="Select Time"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/datetime_label"
-            app:layout_constraintStart_toEndOf="@id/date_text_view"
-            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- DESCRIPTION + PLAYER COUNT-->
 
         <!-- Players Needed Input -->
+
+        <!-- Image Upload -->
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/description_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -160,7 +121,95 @@
                 android:maxLines="3" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Image Upload -->
+        <TextView
+            android:id="@+id/datetime_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Date and Time"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/address_layout" />
+
+        <TextView
+            android:id="@+id/date_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:drawable/editbox_background"
+            android:drawableStart="@android:drawable/ic_menu_my_calendar"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:text="Select Date"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/time_text_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/datetime_label" />
+
+        <TextView
+            android:id="@+id/time_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:drawable/editbox_background"
+            android:drawableStart="@android:drawable/ic_menu_recent_history"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:text="Select Time"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/date_text_view"
+            app:layout_constraintTop_toBottomOf="@id/datetime_label" />
+
+        <Button
+            android:id="@+id/upload_image_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawableStart="@android:drawable/ic_menu_camera"
+            android:paddingStart="16dp"
+            android:text="Upload Image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_label" />
+
+        <Button
+            android:id="@+id/create_game_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@android:color/holo_green_dark"
+            android:text="Create Game"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/preview_button"
+            app:layout_constraintTop_toBottomOf="@id/game_image_view" />
+
+        <TextView
+            android:id="@+id/image_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="112dp"
+            android:text="Game Image"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date_text_view" />
+
+        <Button
+            android:id="@+id/preview_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#808080"
+            android:text="Preview"
+            app:layout_constraintEnd_toStartOf="@id/create_game_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/game_image_view" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/players_needed_layout"
@@ -172,65 +221,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="507dp">
+            tools:layout_editor_absoluteY="514dp">
 
         </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/upload_image_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:drawableStart="@android:drawable/ic_menu_camera"
-            android:paddingStart="16dp"
-            android:text="Upload Image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_label" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/players_needed_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="4dp"
             android:inputType="number"
             app:layout_constraintTop_toBottomOf="@+id/description_layout"
             tools:layout_editor_absoluteX="16dp" />
-
-        <TextView
-            android:id="@+id/image_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="136dp"
-            android:text="Game Image"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/date_text_view" />
-
-        <Button
-            android:id="@+id/create_game_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="@android:color/holo_green_dark"
-            android:text="Create Game"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/preview_button"
-            app:layout_constraintTop_toBottomOf="@id/game_image_view" />
-
-        <Button
-            android:id="@+id/preview_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp"
-            android:backgroundTint="#808080"
-            android:text="Preview"
-            app:layout_constraintEnd_toStartOf="@id/create_game_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/game_image_view" />
 
         <ImageView
             android:id="@+id/game_image_view"

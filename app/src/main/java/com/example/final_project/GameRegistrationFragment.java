@@ -1,5 +1,6 @@
 package com.example.final_project;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,11 +36,10 @@ public class GameRegistrationFragment extends Fragment {
         if (getArguments() != null) {
             selectedGame = (Game) getArguments().getSerializable("selected_game");
 
-            // Set game location as title
+
             TextView gameTitle = view.findViewById(R.id.gameTitleText);
             gameTitle.setText(selectedGame.getLocation());
 
-            // Set rest of the game details
             TextView tvRegistration = view.findViewById(R.id.tvRegistration);
             tvRegistration.setText(
                     "Sport: " + selectedGame.getSportType() + "\n" +
@@ -50,7 +50,6 @@ public class GameRegistrationFragment extends Fragment {
                             "Players Needed: " + selectedGame.getPlayersNeeded()
             );
 
-            // Set the image
             ImageView imageView = view.findViewById(R.id.imageView);
             imageView.setImageResource(selectedGame.getImageResourceId());
         }
@@ -72,6 +71,16 @@ public class GameRegistrationFragment extends Fragment {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.main, new GameDiscoveryFragment())
                     .commit();
+        });
+
+        Button mapViewButton = view.findViewById(R.id.mapViewButton);
+        mapViewButton.setOnClickListener(v -> {
+            if (selectedGame != null && selectedGame.getLocation() != null) {
+                Intent intent = new Intent(requireContext(), MapsActivity.class);
+                intent.putExtra("location", selectedGame.getLocation());
+                intent.putExtra("markerTitle", "Players Needed: " + selectedGame.getPlayersNeeded());
+                startActivity(intent);
+            }
         });
     }
 }
