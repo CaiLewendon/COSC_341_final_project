@@ -47,16 +47,19 @@ class Game implements Serializable {
     private String location;
     private Date dateTime;
     private Uri imageUri;
-    private int imageResourceId; // New field for drawable resource ID
+    private int imageResourceId;
+    private String description;
+    private int playersNeeded;
 
     // Original constructor with Uri
-    public Game(String hostName, String sportType, String location, Date dateTime, Uri imageUri) {
+    public Game(String hostName, String sportType, String location, Date dateTime, int imageResourceId, String description, int playersNeeded) {
         this.hostName = hostName;
         this.sportType = sportType;
         this.location = location;
         this.dateTime = dateTime;
-        this.imageUri = imageUri;
-        this.imageResourceId = -1; // Default value
+        this.imageResourceId = imageResourceId;
+        this.description = description;
+        this.playersNeeded = playersNeeded;
     }
 
     // New constructor with resource ID
@@ -95,5 +98,13 @@ class Game implements Serializable {
 
     public boolean hasImageResource() {
         return imageResourceId != -1;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getPlayersNeeded() {
+        return playersNeeded;
     }
 }

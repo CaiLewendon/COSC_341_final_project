@@ -37,6 +37,9 @@ public class GameCreationFragment extends Fragment {
     private Button createGameButton;
     private Button previewButton;
 
+    private EditText descriptionEditText;
+    private EditText playersNeededEditText;
+
     private Calendar selectedDateTime = Calendar.getInstance();
     private int selectedImageResource = -1; // Using -1 to indicate no image is selected
     private boolean imageSelected = false;
@@ -60,7 +63,8 @@ public class GameCreationFragment extends Fragment {
         uploadImageButton = view.findViewById(R.id.upload_image_button);
         createGameButton = view.findViewById(R.id.create_game_button);
         previewButton = view.findViewById(R.id.preview_button);
-
+        descriptionEditText = view.findViewById(R.id.description_edit_text);
+        playersNeededEditText = view.findViewById(R.id.players_needed_edit_text);
         // Change the text on the upload button to better reflect its new function
         uploadImageButton.setText("Select Image");
 
@@ -188,9 +192,10 @@ public class GameCreationFragment extends Fragment {
                 sportTypeSpinner.getSelectedItem().toString(),
                 addressEditText.getText().toString(),
                 selectedDateTime.getTime(),
-                selectedImageResource
+                selectedImageResource,
+                descriptionEditText.getText().toString(),
+                Integer.parseInt(playersNeededEditText.getText().toString())
         );
-
         // Add the game to the singleton store
         GameStore.getInstance().addGame(game);
 
@@ -256,6 +261,30 @@ public class GameCreationFragment extends Fragment {
         if (selectedDateTime.before(now)) {
             Toast.makeText(requireContext(), "Please select a future date and time", Toast.LENGTH_SHORT).show();
             isValid = false;
+        }
+
+        // Validate description
+        if (descriptionEditText.getText().toString().trim().isEmpty()) {
+            descriptionEditText.setError("Description is required");
+            isValid = false;
+        }
+
+// Validate players needed
+        String playersText = playersNeededEditText.getText().toString().trim();
+        if (playersText.isEmpty()) {
+            playersNeededEditText.setError("Number of players needed is required");
+            isValid = false;
+        } else {
+            try {
+                int playersNeeded = Integer.parseInt(playersText);
+                if (playersNeeded <= 0) {
+                    playersNeededEditText.setError("Must be at least 1 player needed");
+                    isValid = false;
+                }
+            } catch (NumberFormatException e) {
+                playersNeededEditText.setError("Invalid number");
+                isValid = false;
+            }
         }
 
         return isValid;
