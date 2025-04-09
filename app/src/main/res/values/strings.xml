@@ -6,4 +6,5 @@
     <string name="game_creation_management">Game Creation &amp; Management</string>
     <string name="player_rating_review">Player Rating &amp; Review System</string>
     <string name="venue_court_reservation">Venue &amp; Court Reservation System</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
