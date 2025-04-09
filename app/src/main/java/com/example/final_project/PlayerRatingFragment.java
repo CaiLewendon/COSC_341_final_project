@@ -1,8 +1,11 @@
 package com.example.final_project;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,11 +17,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class PlayerRatingFragment extends Fragment {
 
-    // UI containers
+    // UI stufff
     private LinearLayout playerListLayout;
     private LinearLayout playerDetailLayout;
     private RecyclerView recyclerViewPlayers;
@@ -27,13 +32,19 @@ public class PlayerRatingFragment extends Fragment {
     private ImageView ivPlayerAvatarDetail;
     private Button btnAddReview;
     private ImageView btnBackToList;
+    private SearchView searchViewPlayers;
 
-    // Data lists
-    private List<Player> playerList;
+    // Data and Adapter
+    private List<Player> playerList; //pull player list from file
+    private PlayerAdapter playerAdapter; // adapter for players
     private List<Review> reviewList; // reviews for the selected player
+    private Player currentPlayer;   //      Currently selected player
+    private PlayerDataStorage storage;  //file storage helper
+
+    // a Request code for launching the review activity
+    private static final int REQUEST_CODE_LEAVE_REVIEW = 1;
 
     public PlayerRatingFragment() {
-        // Required empty public constructor
     }
 
     @Nullable
@@ -41,7 +52,7 @@ public class PlayerRatingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Inflate the combined layout
+        //inflate the combined layout
         return inflater.inflate(R.layout.fragment_player_rating, container, false);
     }
 
@@ -56,8 +67,44 @@ public class PlayerRatingFragment extends Fragment {
         ivPlayerAvatarDetail = view.findViewById(R.id.ivPlayerAvatar);
         btnAddReview = view.findViewById(R.id.btnAddReview);
         btnBackToList = view.findViewById(R.id.btnBackToList);
+        searchViewPlayers = view.findViewById(R.id.searchViewPlayers);
 
-        // Setup back button to return to player list
+        //inhit storage helper and load players from the local file
+        storage = new PlayerDataStorage(getContext());
+        playerList = storage.readPlayers();
+
+        // sort players by average rating highest to lowest
+        Collections.sort(playerList, new Comparator<Player>() {
+            @Override
+            public int compare(Player p1, Player p2) {
+                return Double.compare(p2.getAverageRating(), p1.getAverageRating());
+            }
+        });
+
+        // players list using a RecyclerView
+        playerAdapter = new PlayerAdapter(playerList);
+        recyclerViewPlayers.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewPlayers.setAdapter(playerAdapter);
+
+        // Setup search view to filter players by name
+        searchViewPlayers.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterPlayers(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterPlayers(newText);
+                return false;
+            }
+        });
+
+        //Initially show the player list view
+        showPlayerList();
+
+        //a back button to return to player list view
         btnBackToList.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -65,57 +112,85 @@ public class PlayerRatingFragment extends Fragment {
             }
         });
 
-        // Setup players list with dummy data
-        playerList = new ArrayList<>();
-        playerList.add(new Player("Player One", "4.5 ★ (20 Reviews)"));
-        playerList.add(new Player("Player Two", "3.8 ★ (15 Reviews)"));
-        playerList.add(new Player("Player Three", "5.0 ★ (30 Reviews)"));
-
-        recyclerViewPlayers.setLayoutManager(new LinearLayoutManager(getContext()));
-        PlayerAdapter playerAdapter = new PlayerAdapter(playerList);
-        recyclerViewPlayers.setAdapter(playerAdapter);
-
-        // Initially show the player list
-        showPlayerList();
-
-        // Set up the Add Review button (you can later open another fragment or dialog for review submission)
+        // the Add Review button to open the review submission stuff
         btnAddReview.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                // Here you might open a review submission dialog or fragment.
-                // For demonstration, we'll just add a dummy review and refresh the reviews list.
-                if (reviewList != null) {
-                    reviewList.add(new Review("New Reviewer", 4, "This is a new review.", "2023-04-01"));
-                    recyclerViewReviews.getAdapter().notifyDataSetChanged();
+                if (currentPlayer != null) {
+                    // Launch LeaveReviewActivity passing the player's name.
+                    Intent intent = new Intent(getContext(), LeaveReviewActivity.class);
+                    intent.putExtra("playerName", currentPlayer.getName());
+                    startActivityForResult(intent, REQUEST_CODE_LEAVE_REVIEW);
                 }
             }
         });
     }
 
-    // Show player list view and hide detail view
+    // filter for players by name using the search
+    private void filterPlayers(String query) {
+        List<Player> filteredList = new ArrayList<>();
+        for (Player player : playerList) {
+            if (player.getName().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(player);
+            }
+        }
+        // Update adapter with the filtered list
+        playerAdapter.updatePlayers(filteredList);
+    }
+
+    // Handle the result from LeaveReviewActivity
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_LEAVE_REVIEW && resultCode == Activity.RESULT_OK) {
+            // get review details from the returned intent
+            String reviewerName = data.getStringExtra("reviewerName");
+            int rating = data.getIntExtra("rating", 0);
+            String reviewText = data.getStringExtra("reviewText");
+            String timestamp = data.getStringExtra("timestamp");
+
+            // Create  new review and add it to the current player's reviews list
+            Review newReview = new Review(reviewerName, rating, reviewText, timestamp);
+            currentPlayer.getReviews().add(newReview);
+
+            // Update the stored players list
+            storage.writePlayers(playerList);
+
+            // refresh the review adapter.
+            recyclerViewReviews.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    //the player list view and hides the detail view
     private void showPlayerList() {
+        // read the players from storage for most up to date info
+        playerList = storage.readPlayers();
+        Collections.sort(playerList, new Comparator<Player>() {
+            @Override
+            public int compare(Player p1, Player p2) {
+                return Double.compare(p2.getAverageRating(), p1.getAverageRating());
+            }
+        });
+        playerAdapter.updatePlayers(playerList);
+
+        // Switch to the list view
         playerListLayout.setVisibility(View.VISIBLE);
         playerDetailLayout.setVisibility(View.GONE);
     }
 
-    // Show player detail view for the selected player and load reviews dynamically
+    // detail view for the selected player and loads reviews
     private void showPlayerDetail(Player player) {
+        currentPlayer = player;
         playerListLayout.setVisibility(View.GONE);
         playerDetailLayout.setVisibility(View.VISIBLE);
 
-        // Set player details in the detail view
+        // Set the player details in the detail view
         tvPlayerNameDetail.setText(player.getName());
-        // For the avatar, you could load an image here (using an image loading library, etc.)
 
-        // Create dummy reviews for demonstration
-        reviewList = new ArrayList<>();
-        reviewList.add(new Review("Alice", 4, "Great player!", "2023-03-01"));
-        reviewList.add(new Review("Bob", 5, "Excellent performance.", "2023-03-05"));
-        reviewList.add(new Review("Charlie", 3, "Could improve.", "2023-03-10"));
-
+        // getreviews from the player object
+        List<Review> reviews = player.getReviews();
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(getContext()));
-        ReviewAdapter reviewAdapter = new ReviewAdapter(reviewList);
-        recyclerViewReviews.setAdapter(reviewAdapter);
+        recyclerViewReviews.setAdapter(new ReviewAdapter(reviews));
     }
 
     // Adapter for displaying the list of players
@@ -124,6 +199,12 @@ public class PlayerRatingFragment extends Fragment {
 
         public PlayerAdapter(List<Player> players) {
             this.players = players;
+        }
+
+        // change the list with new data for search filtering
+        public void updatePlayers(List<Player> newPlayers) {
+            this.players = newPlayers;
+            notifyDataSetChanged();
         }
 
         @NonNull
@@ -140,7 +221,7 @@ public class PlayerRatingFragment extends Fragment {
             holder.itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    // When a player is clicked, show the detailed view with reviews
+                    // When  player clicked, show their detail view and reviews
                     showPlayerDetail(player);
                 }
             });
@@ -168,7 +249,7 @@ public class PlayerRatingFragment extends Fragment {
         }
     }
 
-    // Adapter for displaying reviews in the detail view
+    //adapter for displaying reviews in the detail view
     private class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
         private List<Review> reviews;
 

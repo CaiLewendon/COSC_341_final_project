@@ -7,6 +7,7 @@ import android.widget.RatingBar;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.Toast;
+import android.content.Intent;
 
 public class LeaveReviewActivity extends AppCompatActivity {
 
@@ -24,7 +25,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
         etReviewText = findViewById(R.id.etReviewText);
         btnSubmitReview = findViewById(R.id.btnSubmitReview);
 
-        // Retrieve the player name passed from the previous activity.
+        // getthe player name passed from the previous activity/fragment
         playerName = getIntent().getStringExtra("playerName");
 
         btnSubmitReview.setOnClickListener(new View.OnClickListener() {
@@ -33,17 +34,25 @@ public class LeaveReviewActivity extends AppCompatActivity {
                 float rating = ratingBar.getRating();
                 String reviewText = etReviewText.getText().toString().trim();
 
-                // Validate that the review text is not empty.
+                // validate that the review text is not empty
                 if (reviewText.isEmpty()) {
                     etReviewText.setError("Please write a review.");
                     return;
                 }
 
-                // In a real app, here you would submit the review to your backend or database.
-                Toast.makeText(LeaveReviewActivity.this, "Review submitted for " + playerName, Toast.LENGTH_SHORT).show();
+                //create an intent to hold the new review info
+                Intent resultIntent = new Intent();
+                // for testing the reviewer name is hardcoded
+                resultIntent.putExtra("reviewerName", "Custom Reviewer");
+                // convert to an int if your Review class expects an int rating
+                resultIntent.putExtra("rating", (int) rating);
+                resultIntent.putExtra("reviewText", reviewText);
+                //  use a dynamic timestamp
+                resultIntent.putExtra("timestamp", "2023-04-01");
 
-                // Optionally, pass the new review back to the PlayerDetailActivity using setResult.
-                // For now, simply finish this activity to return.
+                // Set the result so the calling fragment can retrieve the new review
+                setResult(RESULT_OK, resultIntent);
+                Toast.makeText(LeaveReviewActivity.this, "Review submitted for " + playerName, Toast.LENGTH_SHORT).show();
                 finish();
             }
         });

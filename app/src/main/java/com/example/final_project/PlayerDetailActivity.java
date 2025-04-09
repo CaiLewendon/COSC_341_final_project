@@ -30,18 +30,17 @@ public class PlayerDetailActivity extends AppCompatActivity {
 
         tvPlayerName = findViewById(R.id.tvPlayerName);
         ivPlayerAvatar = findViewById(R.id.ivPlayerAvatar);
-        recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
+        //recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
         fabAddReview = findViewById(R.id.fabAddReview);
 
-        // Get the player name from the intent extras.
         String playerName = getIntent().getStringExtra("playerName");
         tvPlayerName.setText(playerName);
         // TODO: Load the player's avatar and other details as needed.
 
-        // Set up the RecyclerView for reviews.
+        //set up the RecyclerView for reviews
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
 
-        // Dummy reviews for demonstration purposes.
+        // these were test reviews, no longer used
         reviewList = new ArrayList<>();
         reviewList.add(new Review("Alice", 4, "Great player, really agile!", "2023-03-01"));
         reviewList.add(new Review("Bob", 5, "Excellent teamwork and skills.", "2023-03-05"));
@@ -50,7 +49,7 @@ public class PlayerDetailActivity extends AppCompatActivity {
         reviewAdapter = new ReviewAdapter(reviewList);
         recyclerViewReviews.setAdapter(reviewAdapter);
 
-        // Handle FAB click to add a new review.
+        // Handle FAB click to add a new review, this is now out of date, no longer used was for initial testing
         fabAddReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,8 +61,8 @@ public class PlayerDetailActivity extends AppCompatActivity {
         });
     }
 
-    // Adapter for the review RecyclerView.
-    private class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
+    // Adapter for the review RecyclerView. this here is still needed for functionality in listing players
+    public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
         private List<Review> reviews;
 
@@ -105,7 +104,7 @@ public class PlayerDetailActivity extends AppCompatActivity {
 
             public void bind(Review review) {
                 tvReviewerName.setText(review.getReviewerName());
-                // For simplicity, display the numeric rating with a star symbol.
+                    // q    For simplicity, display the numeric rating with a star symbol
                 tvRating.setText(review.getRating() + " ★");
                 tvReviewText.setText(review.getReviewText());
                 tvTimestamp.setText(review.getTimestamp());

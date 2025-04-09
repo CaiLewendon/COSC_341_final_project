@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerListActivity extends AppCompatActivity {
@@ -18,24 +17,19 @@ public class PlayerListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private PlayerAdapter adapter;
     private List<Player> playerList;
+    private PlayerDataStorage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_list);
 
-        // Optionally, set up the toolbar if desired.
-        // Toolbar toolbar = findViewById(R.id.toolbar);
-        // setSupportActionBar(toolbar);
-
         recyclerView = findViewById(R.id.recyclerViewPlayers);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Dummy data for demonstration.
-        playerList = new ArrayList<>();
-        playerList.add(new Player("Player One", "4.5 ★ (20 Reviews)"));
-        playerList.add(new Player("Player Two", "3.8 ★ (15 Reviews)"));
-        playerList.add(new Player("Player Three", "5.0 ★ (30 Reviews)"));
+        // read players from local storage
+        storage = new PlayerDataStorage(this);
+        playerList = storage.readPlayers();
 
         adapter = new PlayerAdapter(playerList);
         recyclerView.setAdapter(adapter);
@@ -83,7 +77,6 @@ public class PlayerListActivity extends AppCompatActivity {
             public void bind(Player player) {
                 tvPlayerName.setText(player.getName());
                 tvReviewSummary.setText(player.getReviewSummary());
-                // Set player image if available.
             }
 
             @Override
@@ -91,10 +84,10 @@ public class PlayerListActivity extends AppCompatActivity {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     Player clickedPlayer = players.get(position);
-                    // Start PlayerDetailActivity and pass player details.
+                    // start PlayerDetailActivity  and pass player details as needed
                     Intent intent = new Intent(PlayerListActivity.this, PlayerDetailActivity.class);
                     intent.putExtra("playerName", clickedPlayer.getName());
-                    // Add additional extras as needed.
+                    //  can pass additional data (e.g. reviews) or reload the storage in the detail activity.
                     startActivity(intent);
                 }
             }
