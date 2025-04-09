@@ -1,10 +1,7 @@
 package com.example.final_project;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class GameRegistrationFragment extends Fragment {
     private boolean hasRegistered = false;
@@ -36,22 +33,30 @@ public class GameRegistrationFragment extends Fragment {
         if (getArguments() != null) {
             selectedGame = (Game) getArguments().getSerializable("selected_game");
 
+            ImageView imageView = view.findViewById(R.id.imageView);
+            imageView.setImageResource(selectedGame.getImageResourceId());
 
             TextView gameTitle = view.findViewById(R.id.gameTitleText);
             gameTitle.setText(selectedGame.getLocation());
 
+            TextView distanceText = view.findViewById(R.id.distanceTextView);
+            distanceText.setText("~1.2 km away");
+
             TextView tvRegistration = view.findViewById(R.id.tvRegistration);
+
+            long hoursUntilGame = getHoursUntil(selectedGame.getDateTime());
+
             tvRegistration.setText(
                     "Sport: " + selectedGame.getSportType() + "\n" +
-                            "Host: " + selectedGame.getHostName() + "\n" +
-                            "Date & Time: " + new SimpleDateFormat("MMM dd, yyyy - hh:mm a", Locale.getDefault())
-                            .format(selectedGame.getDateTime()) + "\n" +
-                            "Description: " + selectedGame.getDescription() + "\n" +
+                            "Starts in: " + hoursUntilGame + " hrs\n" +
                             "Players Needed: " + selectedGame.getPlayersNeeded()
             );
 
-            ImageView imageView = view.findViewById(R.id.imageView);
-            imageView.setImageResource(selectedGame.getImageResourceId());
+            TextView secondHalfText = view.findViewById(R.id.secondHalfTextView);
+            secondHalfText.setText(
+                    "Game Host: " + selectedGame.getHostName() + "\n\n" +
+                            "Description:\n" + selectedGame.getDescription()
+            );
         }
 
         return view;
@@ -62,13 +67,17 @@ public class GameRegistrationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button returnButton = view.findViewById(R.id.returnButton);
+        Button mapViewButton = view.findViewById(R.id.mapViewButton);
+        Button registerButton = view.findViewById(R.id.btn_register);
+
+        TextView tvRegistration = view.findViewById(R.id.tvRegistration);
+
         returnButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.main, new GameDiscoveryFragment())
                     .commit();
         });
 
-        Button mapViewButton = view.findViewById(R.id.mapViewButton);
         mapViewButton.setOnClickListener(v -> {
             if (selectedGame != null && selectedGame.getLocation() != null) {
                 Intent intent = new Intent(requireContext(), MapsActivity.class);
@@ -78,32 +87,33 @@ public class GameRegistrationFragment extends Fragment {
             }
         });
 
-        Button registerButton = view.findViewById(R.id.btn_register);
-        TextView tvRegistration = view.findViewById(R.id.tvRegistration);
-
         registerButton.setOnClickListener(v -> {
             if (!hasRegistered) {
                 hasRegistered = true;
-                int playersLeft = selectedGame.getPlayersNeeded();
 
-                // Make sure it doesn't go below 0
+                int playersLeft = selectedGame.getPlayersNeeded();
                 if (playersLeft > 0) {
                     selectedGame.setPlayersNeeded(playersLeft - 1);
                 }
 
-                // Update the UI with the new players needed count
+                long hoursUntilGame = getHoursUntil(selectedGame.getDateTime());
+
+                // Update top TextView
                 tvRegistration.setText(
                         "Sport: " + selectedGame.getSportType() + "\n" +
-                                "Host: " + selectedGame.getHostName() + "\n" +
-                                "Date & Time: " + new SimpleDateFormat("MMM dd, yyyy - hh:mm a", Locale.getDefault())
-                                .format(selectedGame.getDateTime()) + "\n" +
-                                "Description: " + selectedGame.getDescription() + "\n" +
+                                "Starts in: " + hoursUntilGame + " hrs (" +
+                                new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(selectedGame.getDateTime()) + ")\n" +
                                 "Players Needed: " + selectedGame.getPlayersNeeded()
                 );
 
-                registerButton.setEnabled(false); // Disable the button after one click
+                registerButton.setEnabled(false);
                 Toast.makeText(getContext(), "You registered for the game!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private long getHoursUntil(Date gameDateTime) {
+        long diffMillis = gameDateTime.getTime() - System.currentTimeMillis();
+        return TimeUnit.MILLISECONDS.toHours(diffMillis);
     }
 }
