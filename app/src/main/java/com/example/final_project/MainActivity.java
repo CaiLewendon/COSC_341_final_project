@@ -1,5 +1,7 @@
 package com.example.final_project;
 
+import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -10,17 +12,28 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoginFragment.LoginListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // By default, load the Game Creation fragment first
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main, new GameCreationFragment())
-                .commit();
+        SharedPreferences prefs = getSharedPreferences(LoginFragment.PREFS_NAME, MODE_PRIVATE);
+        String username = prefs.getString(LoginFragment.KEY_USERNAME, null);
+
+        if (username == null) {
+            // No valid username available – load LoginFragment
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main, new LoginFragment())
+                    .commit();
+        } else {
+            // Load default fragment, Game Discovery
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main, new GameDiscoveryFragment())
+                    .commit();
+        }
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -55,5 +68,13 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        // Once login is successful, remove the LoginFragment and load the default fragment.
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main, new GameDiscoveryFragment())
+                .commit();
     }
 }

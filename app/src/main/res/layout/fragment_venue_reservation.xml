@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+
     android:layout_height="match_parent"
     android:background="@color/white"
     android:paddingBottom="80dp"
@@ -11,6 +12,7 @@
     tools:layout_editor_absoluteY="0dp">
 
     <!-- Venue Title -->
+
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
@@ -196,5 +198,6 @@
             android:textSize="22sp"
             android:textStyle="bold" />
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
