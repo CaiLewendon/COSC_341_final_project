@@ -8,8 +8,8 @@
 
     <TextView
         android:id="@+id/tvRegistration"
-        android:layout_width="330dp"
-        android:layout_height="105dp"
+        android:layout_width="332dp"
+        android:layout_height="66dp"
         android:text="@string/game_registration_rsvp"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -17,13 +17,13 @@
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.615" />
+        app:layout_constraintVertical_bias="0.582" />
 
     <TextView
         android:id="@+id/secondHalfTextView"
         android:layout_width="329dp"
         android:layout_height="92dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         android:text="TextView"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,10 +37,11 @@
         android:text="Count Me In!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
 
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRegistration"
-        app:layout_constraintVertical_bias="0.538" />
+        app:layout_constraintVertical_bias="0.565" />
 
     <ImageView
         android:id="@+id/imageView"
