@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:text="Back"
         android:layout_margin="16dp"
-        android:backgroundTint="@android:color/holo_blue_light"
+        android:backgroundTint="@android:color/holo_purple"
         android:textColor="@android:color/white"
         android:layout_gravity="bottom|start" />
 
