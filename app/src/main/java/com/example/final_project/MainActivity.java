@@ -34,7 +34,12 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
                     .commit();
         }
 
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // Make sure the Game Creation icon is selected initially
+        bottomNavigationView.setSelectedItemId(R.id.nav_creation);
+
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -50,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
                 } else if (itemId == R.id.nav_rating) {
                     selectedFragment = new PlayerRatingFragment();
                 } else if (itemId == R.id.nav_venue) {
-                    selectedFragment = new VenueReservationFragment();
+                    selectedFragment = new VenueBrowseFragment();
                 }
 
                 if (selectedFragment != null) {
