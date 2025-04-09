@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Button;
 import android.widget.Toast;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 public class LeaveReviewActivity extends AppCompatActivity {
 
@@ -25,7 +26,7 @@ public class LeaveReviewActivity extends AppCompatActivity {
         etReviewText = findViewById(R.id.etReviewText);
         btnSubmitReview = findViewById(R.id.btnSubmitReview);
 
-        // getthe player name passed from the previous activity/fragment
+        // get player name passed from the previous activity/fragment
         playerName = getIntent().getStringExtra("playerName");
 
         btnSubmitReview.setOnClickListener(new View.OnClickListener() {
@@ -34,23 +35,32 @@ public class LeaveReviewActivity extends AppCompatActivity {
                 float rating = ratingBar.getRating();
                 String reviewText = etReviewText.getText().toString().trim();
 
-                // validate that the review text is not empty
+                //validate that the review text is not empty
                 if (reviewText.isEmpty()) {
                     etReviewText.setError("Please write a review.");
                     return;
                 }
 
-                //create an intent to hold the new review info
+                // Read the username from SharedPreferences
+                SharedPreferences prefs = getSharedPreferences(LoginFragment.PREFS_NAME, MODE_PRIVATE);
+                String username = prefs.getString(LoginFragment.KEY_USERNAME, null);
+
+                if (username == null) {
+                    // Force login if no username was stored
+                    Intent loginIntent = new Intent(LeaveReviewActivity.this, LoginFragment.class);
+                    startActivity(loginIntent);
+                    finish();
+                    return;
+                }
+
+                //   Create an intent to hold the new review info
                 Intent resultIntent = new Intent();
-                // for testing the reviewer name is hardcoded
-                resultIntent.putExtra("reviewerName", "Custom Reviewer");
-                // convert to an int if your Review class expects an int rating
+                resultIntent.putExtra("reviewerName", username);
                 resultIntent.putExtra("rating", (int) rating);
                 resultIntent.putExtra("reviewText", reviewText);
-                //  use a dynamic timestamp
                 resultIntent.putExtra("timestamp", "2023-04-01");
 
-                // Set the result so the calling fragment can retrieve the new review
+                //Set the result so the calling fragment can retrieve the new review
                 setResult(RESULT_OK, resultIntent);
                 Toast.makeText(LeaveReviewActivity.this, "Review submitted for " + playerName, Toast.LENGTH_SHORT).show();
                 finish();

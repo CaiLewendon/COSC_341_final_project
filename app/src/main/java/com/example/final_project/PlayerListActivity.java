@@ -3,6 +3,8 @@ package com.example.final_project;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
@@ -22,15 +24,24 @@ public class PlayerListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences prefs = getSharedPreferences(LoginFragment.PREFS_NAME, MODE_PRIVATE);
+        String username = prefs.getString(LoginFragment.KEY_USERNAME, null);
+        if (username == null) {
+            // No valid username available – force login (or take appropriate action)
+            Intent loginIntent = new Intent(PlayerListActivity.this, LoginFragment.class);
+            startActivity(loginIntent);
+            finish();
+            return;
+        }
+
+        //continue with your normal initialization if a username exists.
         setContentView(R.layout.activity_player_list);
 
         recyclerView = findViewById(R.id.recyclerViewPlayers);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // read players from local storage
         storage = new PlayerDataStorage(this);
         playerList = storage.readPlayers();
-
         adapter = new PlayerAdapter(playerList);
         recyclerView.setAdapter(adapter);
     }
@@ -84,7 +95,7 @@ public class PlayerListActivity extends AppCompatActivity {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     Player clickedPlayer = players.get(position);
-                    // start PlayerDetailActivity  and pass player details as needed
+                    //start PlayerDetailActivity  and pass player details as needed
                     Intent intent = new Intent(PlayerListActivity.this, PlayerDetailActivity.class);
                     intent.putExtra("playerName", clickedPlayer.getName());
                     //  can pass additional data (e.g. reviews) or reload the storage in the detail activity.

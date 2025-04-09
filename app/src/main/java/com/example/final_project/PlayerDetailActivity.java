@@ -30,14 +30,14 @@ public class PlayerDetailActivity extends AppCompatActivity {
 
         tvPlayerName = findViewById(R.id.tvPlayerName);
         ivPlayerAvatar = findViewById(R.id.ivPlayerAvatar);
-        //recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
+        recyclerViewReviews = findViewById(R.id.recyclerViewReviews);  // Un-commented so that it is not null.
         fabAddReview = findViewById(R.id.fabAddReview);
 
         String playerName = getIntent().getStringExtra("playerName");
         tvPlayerName.setText(playerName);
         // TODO: Load the player's avatar and other details as needed.
 
-        //set up the RecyclerView for reviews
+        // set up the RecyclerView for reviews
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
 
         // these were test reviews, no longer used
@@ -104,7 +104,7 @@ public class PlayerDetailActivity extends AppCompatActivity {
 
             public void bind(Review review) {
                 tvReviewerName.setText(review.getReviewerName());
-                    // q    For simplicity, display the numeric rating with a star symbol
+                // For simplicity, display the numeric rating with a star symbol
                 tvRating.setText(review.getRating() + " ★");
                 tvReviewText.setText(review.getReviewText());
                 tvTimestamp.setText(review.getTimestamp());

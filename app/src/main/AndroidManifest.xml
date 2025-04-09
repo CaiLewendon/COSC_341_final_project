@@ -22,6 +22,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".LeaveReviewActivity" />
+        <activity android:name=".LoginFragment" />
+        <activity android:name=".PlayerListActivity" />
+        <activity android:name=".PlayerDetailActivity" />
     </application>
 
 </manifest>
