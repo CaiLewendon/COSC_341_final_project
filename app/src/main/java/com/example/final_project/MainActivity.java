@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (itemId == R.id.nav_rating) {
                     selectedFragment = new PlayerRatingFragment();
                 } else if (itemId == R.id.nav_venue) {
-                    selectedFragment = new VenueReservationFragment();
+                    selectedFragment = new VenueBrowseFragment();
                 }
 
                 if (selectedFragment != null) {
