@@ -107,4 +107,8 @@ class Game implements Serializable {
     public int getPlayersNeeded() {
         return playersNeeded;
     }
+    public void setPlayersNeeded(int playersNeeded) {
+        this.playersNeeded = playersNeeded;
+    }
+
 }

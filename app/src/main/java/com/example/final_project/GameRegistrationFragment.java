@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.Date;
 
 public class GameRegistrationFragment extends Fragment {
-
+    private boolean hasRegistered = false;
     private Game selectedGame;
 
     @Override
@@ -61,11 +61,6 @@ public class GameRegistrationFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button registerButton = view.findViewById(R.id.btn_register);
-        registerButton.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "You registered for the game!", Toast.LENGTH_SHORT).show();
-        });
-
         Button returnButton = view.findViewById(R.id.returnButton);
         returnButton.setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
@@ -80,6 +75,34 @@ public class GameRegistrationFragment extends Fragment {
                 intent.putExtra("location", selectedGame.getLocation());
                 intent.putExtra("markerTitle", "Players Needed: " + selectedGame.getPlayersNeeded());
                 startActivity(intent);
+            }
+        });
+
+        Button registerButton = view.findViewById(R.id.btn_register);
+        TextView tvRegistration = view.findViewById(R.id.tvRegistration);
+
+        registerButton.setOnClickListener(v -> {
+            if (!hasRegistered) {
+                hasRegistered = true;
+                int playersLeft = selectedGame.getPlayersNeeded();
+
+                // Make sure it doesn't go below 0
+                if (playersLeft > 0) {
+                    selectedGame.setPlayersNeeded(playersLeft - 1);
+                }
+
+                // Update the UI with the new players needed count
+                tvRegistration.setText(
+                        "Sport: " + selectedGame.getSportType() + "\n" +
+                                "Host: " + selectedGame.getHostName() + "\n" +
+                                "Date & Time: " + new SimpleDateFormat("MMM dd, yyyy - hh:mm a", Locale.getDefault())
+                                .format(selectedGame.getDateTime()) + "\n" +
+                                "Description: " + selectedGame.getDescription() + "\n" +
+                                "Players Needed: " + selectedGame.getPlayersNeeded()
+                );
+
+                registerButton.setEnabled(false); // Disable the button after one click
+                Toast.makeText(getContext(), "You registered for the game!", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -48,9 +48,11 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
 
                 if (itemId == R.id.nav_discovery) {
                     selectedFragment = new GameDiscoveryFragment();
-                } else if (itemId == R.id.nav_registration) {
-                    selectedFragment = new GameRegistrationFragment();
-                } else if (itemId == R.id.nav_creation) {
+                }
+//                else if (itemId == R.id.nav_registration) {
+//                    selectedFragment = new GameRegistrationFragment();
+//                }
+                else if (itemId == R.id.nav_creation) {
                     selectedFragment = new GameCreationFragment();
                 } else if (itemId == R.id.nav_rating) {
                     selectedFragment = new PlayerRatingFragment();
